@@ -62,7 +62,7 @@ void TwoWDMotor::Marcia(int8_t DxSpeed, int8_t SxSpeed)
     }
   }
   //Setta la velocità trasformando la percentuale in parametro di controllo del PWM
-  digitalWrite(_DxPWM, ((_PWMResolution/100)*abs(_DxPWM)));
+  digitalWrite(_DxPWM, ((_PWMResolution/100)*abs(DxSpeed)));
 
   //Gestisce il verso di rotazione del motore Sx (2)
   if(SxSpeed>0)// Il valore della velocità è positivo?
@@ -77,7 +77,7 @@ void TwoWDMotor::Marcia(int8_t DxSpeed, int8_t SxSpeed)
     }
   }
   //Setta la velocità trasformando la percentuale in parametro di controllo del PWM
-  digitalWrite(_SxPWM, ((_PWMResolution/100)*abs(_SxPWM)));
+  digitalWrite(_SxPWM, ((_PWMResolution/100)*abs(SxSpeed)));
 }
 
 
