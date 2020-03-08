@@ -80,6 +80,109 @@ void TwoWDMotor::Marcia(int8_t DxSpeed, int8_t SxSpeed)
   digitalWrite(_SxPWM, ((_PWMResolution/100)*abs(SxSpeed)));
 }
 
+void TwoWDMotor::Impulso(uint16_t _DxImp, uint16_t _SxImp)
+{
+  uint8_t caso;
+  unsigned long TzDx, TzSx;
+  
+  if(_DxImp == 0 & _SxImp == 0)
+  {
+    caso = 0;
+  }
+  else
+  {
+    if(_DxImp > 0 & _SxImp == 0)
+    {
+      caso = 1;
+    }
+    else
+    {
+      if(_DxImp == 0 & _SxImp > 0)
+      {
+        caso = 2;
+      }
+      else
+      {
+        if(_DxImp == _SxImp)
+        {
+          caso = 3;
+        }
+        else
+        {
+          caso = 4;
+        }
+      }
+    }
+  }
+
+  switch (caso)
+  {
+    case 0://Nessun impulso
+      break;
+    case 1://Impulso sul solo canale Dx
+      TzDx = millis() + _DxImp;
+      digitalWrite(_DxPWM,HIGH);
+      while(millis() <= TzDx)
+      {
+        //aspetta
+      }
+      digitalWrite(_DxPWM,LOW);
+      break;
+    case 2://Impulso sul solo canale Sx
+      TzSx = millis() + _SxImp;
+      digitalWrite(_SxPWM,HIGH);
+      while(millis() <= TzSx)
+      {
+        //aspetta
+      }
+      digitalWrite(_SxPWM,LOW);
+      break;
+    case 3://Impulso uguale sui canali Dx e Sx
+      TzDx = millis() + _DxImp;
+      digitalWrite(_DxPWM,HIGH);
+      digitalWrite(_SxPWM,HIGH);
+      while(millis() <= TzDx)
+      {
+        //aspetta
+      }
+      digitalWrite(_DxPWM,LOW);
+      digitalWrite(_SxPWM,LOW);
+      break;
+    case 4://Impulsi diversi sui due canali
+      TzDx = millis() + _DxImp;
+      TzSx = millis() + _SxImp;
+      if (TzDx > TzSx)
+      {
+        while(millis() <= TzDx)
+        {
+          //aspetta
+        }
+        digitalWrite(_DxPWM,LOW);
+        while(millis() <= TzSx)
+        {
+          //aspetta
+        }
+        digitalWrite(_SxPWM,LOW);
+      }
+      else
+      {
+        while(millis() <= TzSx)
+        {
+          //aspetta
+        }
+        digitalWrite(_SxPWM,LOW);
+        while(millis() <= TzDx)
+        {
+          //aspetta
+        }
+        digitalWrite(_DxPWM,LOW);
+      }      
+      break;
+    default:
+      break;
+  }  
+}
+
 
 void TwoWDMotor::Help(Stream &Output)
 {
@@ -110,6 +213,10 @@ void TwoWDMotor::Help(Stream &Output)
   Output.println("        massima velocità indietro e 100 è la massima velocità in");
   Output.println("        avanti. Il verso di rotazione è influenzato dal parametro");
   Output.println("        _DxVerso per il motore 1 e _SxVerso per il 2");
+  Output.println("----------------------------------------------------------------");
+  Output.println("motori.Impulso(Lunghezza imp 1, Lunghezza imp 2)");
+  Output.println("        Il parametro Lunghezza va da 1 a 65535 mS. 0 non da alcun");
+  Output.println("        impulso a quel canale");
   Output.println("----------------------------------------------------------------");
   Output.println("motori.Help(Serial)");
   Output.println("        Questo Help");

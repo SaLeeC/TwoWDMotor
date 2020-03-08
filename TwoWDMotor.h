@@ -35,8 +35,8 @@ THE SOFTWARE.
 
 #include "Arduino.h"
 
-#define Versione "0.0.00"
-#define Del "06/03/2020"
+#define Versione "0.0.01"
+#define Del "08/03/2020"
 
 class TwoWDMotor
 {
@@ -44,6 +44,7 @@ class TwoWDMotor
     TwoWDMotor(uint8_t DxPWM, uint8_t DxDir, uint8_t SxPWM, uint8_t SxDir);
     void Help(Stream &Output);
     void Marcia(int8_t DxSpeed, int8_t SxSpeed);
+    void TwoWDMotor::Impulso(uint16_t DxImp, uint16_t SxImp);
 
     uint8_t _DxVerso = true;
     uint8_t _SxVerso = true;
